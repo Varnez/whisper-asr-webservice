@@ -9,6 +9,7 @@ import whisper
 from .utils import model_converter, ResultWriter, WriteTXT, WriteSRT, WriteVTT, WriteTSV, WriteJSON
 from faster_whisper import WhisperModel
 
+
 model_name= os.getenv("ASR_MODEL", "base")
 model_path = os.path.join("/root/.cache/faster_whisper", model_name)
 model_converter(model_name, model_path)
@@ -17,7 +18,9 @@ if torch.cuda.is_available():
     model = WhisperModel(model_path, device="cuda", compute_type="float32")
 else:
     model = WhisperModel(model_path, device="cpu", compute_type="int8")
+
 model_lock = Lock()
+
 
 def transcribe(
     audio,
@@ -34,7 +37,7 @@ def transcribe(
         options_dict["initial_prompt"] = initial_prompt
     if word_timestamps:
         options_dict["word_timestamps"] = True
-    with model_lock:   
+    with model_lock:
         segments = []
         text = ""
         i = 0
@@ -47,7 +50,7 @@ def transcribe(
                 "segments": segments,
                 "text": text
             }
-    
+
     outputFile = StringIO()
     write_result(result, outputFile, output)
     outputFile.seek(0)
@@ -60,7 +63,7 @@ def language_detection(audio):
 
     # detect the spoken language
     with model_lock:
-        segments, info = model.transcribe(audio, beam_size=5)
+        _, info = model.transcribe(audio, beam_size=5)
         detected_lang_code = info.language
 
     return detected_lang_code
