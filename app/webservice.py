@@ -1,11 +1,11 @@
 import os
 from os import path
 import importlib.metadata
-from typing import BinaryIO, Union
+from typing import Union
 
 import numpy as np
 import ffmpeg
-from fastapi import FastAPI, File, UploadFile, Query, applications, Depends, Body
+from fastapi import FastAPI, Query, applications, Body
 from fastapi.responses import StreamingResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.openapi.docs import get_swagger_ui_html
@@ -68,10 +68,10 @@ def asr(
 ):
     audio_url = payload["inputs"]["audio"][0]
     language = payload["inputs"]["language"][0]
-    
+
     audio_data = get_audio_from_url(audio_url)
     result = transcribe(load_audio(audio_data, encode), task, language, None, word_timestamps, output)
-    
+
     return StreamingResponse(
         result,
         media_type="text/plain",
