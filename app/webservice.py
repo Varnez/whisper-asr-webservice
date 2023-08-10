@@ -15,9 +15,9 @@ import requests
 
 ASR_ENGINE = os.getenv("ASR_ENGINE", "openai_whisper")
 if ASR_ENGINE == "faster_whisper":
-    from .faster_whisper.core import transcribe, language_detection
+    from .faster_whisper.core import transcribe
 else:
-    from .openai_whisper.core import transcribe, language_detection
+    from .openai_whisper.core import transcribe
 
 SAMPLE_RATE=16000
 LANGUAGE_CODES=sorted(list(tokenizer.LANGUAGES.keys()))
