@@ -7,12 +7,15 @@ import torch
 import whisper
 from whisper.utils import ResultWriter, WriteTXT, WriteSRT, WriteVTT, WriteTSV, WriteJSON
 
-model_name= os.getenv("ASR_MODEL", "base")
+
+model_name = os.getenv("ASR_MODEL", "base")
 if torch.cuda.is_available():
     model = whisper.load_model(model_name).cuda()
 else:
     model = whisper.load_model(model_name)
+
 model_lock = Lock()
+
 
 def transcribe(
     audio,
