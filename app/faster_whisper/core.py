@@ -40,7 +40,7 @@ def transcribe(
     with model_lock:
         segments = []
         text = ""
-        i = 0
+
         segment_generator, info = model.transcribe(audio, beam_size=5, **options_dict)
         for segment in segment_generator:
             segments.append(segment)
