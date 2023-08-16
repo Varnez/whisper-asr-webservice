@@ -158,7 +158,7 @@ export ASR_MODEL=base
 
 ```sh
 # Build Image
-docker build -t whisper-asr-webservice .
+docker build -t whisper-asr-webservice ..
 
 # Run Container
 docker run -d -p 9000:9000 whisper-asr-webservice
@@ -170,7 +170,7 @@ docker run -d -p 9001:9000 -e ASR_MODEL=base whisper-asr-webservice3
 
 ```sh
 # Build Image
-docker build -f Dockerfile.gpu -t whisper-asr-webservice-gpu .
+docker build -f Dockerfile.gpu-cud117-ubuntu2204 -t whisper-asr-webservice-gpu ..
 
 # Run Container
 docker run -d --gpus all -p 9000:9000 whisper-asr-webservice-gpu
@@ -178,11 +178,16 @@ docker run -d --gpus all -p 9000:9000 whisper-asr-webservice-gpu
 docker run -d --gpus all -p 9000:9000 -e ASR_MODEL=base whisper-asr-webservice-gpu
 ```
 
+For compatibility reasons, gpu dockerfiles have been made available for different Cuda and Ubuntu versions.
+Althought the Dockerfile changes a little, the building commands are the same.
+
+**Note**: Since the Dockerfiles are contained within a Docker directiory, it is important to either execute the build command pointing the context to the parent directory (`..` instead of `.`) or executing the command from the parent directory.
+
 ## Cache
 The ASR model is downloaded each time you start the container, using the large model this can take some time. If you want to decrease the time it takes to start your container by skipping the download, you can store the cache directory (/root/.cache/whisper) to an persistent storage. Next time you start your container the ASR Model will be taken from the cache instead of being downloaded again.
 
 **Important this will prevent you from receiving any updates to the models.**
- 
+
 ```sh
 docker run -d -p 9000:9000 -e ASR_MODEL=large -v //c/tmp/whisper:/root/.cache/whisper onerahmet/openai-whisper-asr-webservice:latest
 ```
